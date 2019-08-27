@@ -1,5 +1,5 @@
-# split into standard weeks
 import numpy as np
+from numpy import ma
 from math import sqrt
 from numpy import split
 from numpy import array
@@ -12,125 +12,102 @@ from statsmodels.tsa.arima_model import ARIMA
 
 #remove error
 def error_remove(dataset):
+	#group the dataset by date
 	days = dataset.groupby(dataset.index.date)
 	total=[]
+	#check for inconsistance for the day
 	for name , oneday in days:
-		if(len(oneday)%24!=0):
-			print(len(oneday))
-			print(" ")
-		else:
+		if(len(oneday)%24==0):
 			for i in oneday.values:
-				#print(i)
 				total.append(i)
-				#print(i[3])
 	return total
 
 # arima forecast
-def arima_forecast(history):
-	# convert history into a univariate series
-	series = to_series(history)
+def arima_forecast(dataset):
+	# converting dataset into series
+	dataset_series = to_series(dataset)
 	# define the model
-	model = ARIMA(series, order=(7,0,0))
+	model = ARIMA(dataset_series, order=(7,0,0))
 	# fit the model
 	model_fit = model.fit(disp=False)
 	# make forecast
-	yhat = model_fit.predict(len(series), len(series)+23)
-	return yhat
-
-# evaluate one or more weekly forecasts against expected values
-def evaluate_forecasts(actual, predicted):
-	scores = list()
-	# calculate an RMSE score for each day
-	for i in range(actual.shape[1]):
-		# calculate mse
-		print(str(actual[:,i])+' , '+str(predicted[:,i]))
-		mse = mean_squared_error(actual[:, i], predicted[:, i])
-		# calculate rmse
-		rmse = sqrt(mse)
-		# store
-		scores.append(rmse)
-	# calculate overall RMSE
-	s = 0
-	for row in range(actual.shape[0]):
-		for col in range(actual.shape[1]):
-			s += (actual[row, col] - predicted[row, col])**2
-	score = sqrt(s / (actual.shape[0] * actual.shape[1]))
-	return score, scores
-	
-# evaluate a single model
-def evaluate_model(model_func, train, test):
-	# history is a list of weekly data
-	history = [x for x in train]
-	# walk-forward validation over each week
-	predictions = list()
-	for i in range(len(test)):
-		# predict the week
-		yhat_sequence = model_func(history)
-		# store the predictions
-		predictions.append(yhat_sequence)
-		# get real observation and add to history for predicting the next week
-		history.append(test[i, :])
-	predictions = array(predictions)
-	# evaluate predictions days for each week
-	score, scores = evaluate_forecasts(test[:, :, 0], predictions)
-	return score, scores
-	
-# summarize scores
-def summarize_scores(name, score, scores):
-	s_scores = ', '.join(['%.1f' % s for s in scores])
-	print('%s: [%.3f] %s' % (name, score, s_scores))
-		
-# convert windows of weekly multivariate data into a series of total power
+	forecast = model_fit.predict(len(dataset_series), len(dataset_series)+23)
+	return forecast
+			
+# convert list of daily data into a series of total power
 def to_series(data):
 	# extract just the total power from each week
-	series = [week[:, 0] for week in data]
+	series = [day[:, 0] for day in data]
 	# flatten into a single series
 	series = array(series).flatten()
 	return series
 
-# split a univariate dataset into train/test sets
+# split a dataset into train/test sets
 def split_dataset(data):
-	# split into standard weeks
-	print(len(data))
+	# split data into days
 	train, test = data[:-480], data[-480:]
-	print(len(train))
-	print(len(test))
-	# restructure into windows of weekly data
-	train = array(split(train, len(train)/24))
+	# restructure into windows of daily data
 	test = array(split(test, len(test)/24))
+	train = array(split(train, len(train)/24))
 	return train, test
-# load the new file
-df = read_csv('Power-Networks-LCL.csv', header=0, infer_datetime_format=True, parse_dates=['DateTime'], index_col=['DateTime'])
-#df = pd.read_csv("Power-Networks-LCL.csv")
-gk = df.groupby('LCLid')
-
-for name,datas in gk:
-#datas= gk.get_group("MAC000003")
-
-
-	daily_groups = datas.resample('H')
-	daily_data = daily_groups.sum()
-
-#print(daily_data.values)
-# summarize
-	print(daily_data.shape)
-#print((len(daily_data))%24)
-#print(daily_data.head())
-# save
-
-	dataset= error_remove(daily_data)
-	train, test = split_dataset(np.array(dataset))
-# validate train data
-	print(train.shape)
-	series = to_series(train)
-
-	days = ['1', '2', '3', '4', '5', '6', '7', '8' , '9' , '10' , '11' , '12' , '13' , '14' , '15' , '16' , '17' , '18' , '19' , '20' , '21' ,'22' ,'23' , '24' ]
-
-
-	scores = arima_forecast(train)
-	pyplot.plot(days, scores, marker='o', label=name)
 	
-# show plot
-pyplot.legend()
-pyplot.show()
 	
+	
+def main():	
+	# load the Data
+	dataset = read_csv('Power-Networks-LCL.csv', header=0, infer_datetime_format=True, parse_dates=['DateTime'], index_col=['DateTime'])
+	#group the data by household id
+	dataset_group_id = dataset.groupby('LCLid')
+
+	#define list of list to store top electric consumtion householde KWh
+	top_3_24hour_kwh = [[0 for x in range(3)] for y in range(24)]
+	#define list of list to store top electric consumtion householde names
+	top_3_24hour_names = [["1" for x in range(3)] for y in range(24)] 
+
+	for name_id,dataset_id in dataset_group_id:
+		#resample the dataset into hourly
+		hourly_datagroup_id = dataset_id.resample('H')
+		hourly_dataset_id = hourly_datagroup_id.sum()
+		
+		#taking logarithm to remove skrewness
+		hourly_dataset_id["KWh"]= ma.filled(np.log(ma.masked_equal(hourly_dataset_id["KWh"], 0)), 0)
+
+		#removing inconsistance of dataset
+		filtered_dataset = error_remove(hourly_dataset_id)
+		
+		#split the dataset
+		train, test = split_dataset(np.array(filtered_dataset))
+	
+		#define hours
+		hours = ['1', '2', '3', '4', '5', '6', '7', '8' , '9' , '10' , '11' , '12' , '13' , '14' , '15' , '16' , '17' , '18' , '19' , '20' , '21' ,'22' ,'23' , '24' ]
+
+
+		predict_id = arima_forecast(train)
+		
+		#convert data again from logarithm form
+		prediction = np.exp(predict_id)
+	
+		#find the top three household of every hour
+		for i in range(0,len(prediction)):
+			hour_temp_score = prediction[i]
+			hour_temp_name = name_id
+			for j in range(0,3):
+				if hour_temp_score > top_3_24hour_kwh[i][j]:
+					top_temp_score = top_3_24hour_kwh[i][j]
+					top_temp_name = top_3_24hour_names[i][j]
+					top_3_24hour_kwh[i][j] = hour_temp_score
+					top_3_24hour_names[i][j] = hour_temp_name
+					hour_temp_score = top_temp_score
+					hour_temp_name = top_temp_name
+		#plot the power consumtion of household
+		pyplot.plot(hours, prediction, marker='o', label=name_id)
+	
+	#print the household
+	for i in range(len(top_3_24hour_kwh)):
+		print("Hour : "+str(i+1)+"\n")
+		for j in range(0,3):
+			print("Rank : "+str(j)+" HouseHold: "+top_3_24hour_names[i][j]+" Kwh: "+str(top_3_24hour_kwh[i][j])+"\n")
+	pyplot.legend()
+	pyplot.show()
+if __name__ == '__main__':
+    main()
