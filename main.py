@@ -45,7 +45,7 @@ def to_series(data):
 # split a dataset into train/test sets
 def split_dataset(data):
 	# split data into days
-	train, test = data[:-480], data[-480:]
+	train, test = data[:-24], data[-24:]
 	# restructure into windows of daily data
 	test = array(split(test, len(test)/24))
 	train = array(split(train, len(train)/24))
@@ -71,7 +71,9 @@ def main():
 		
 		#taking logarithm to remove skrewness
 		hourly_dataset_id["KWh"]= ma.filled(np.log(ma.masked_equal(hourly_dataset_id["KWh"], 0)), 0)
-
+		
+		
+		hourly_dataset_id = hourly_dataset_id.loc['2012':'2013']
 		#removing inconsistance of dataset
 		filtered_dataset = error_remove(hourly_dataset_id)
 		
@@ -101,7 +103,10 @@ def main():
 					hour_temp_name = top_temp_name
 		#plot the power consumtion of household
 		pyplot.plot(hours, prediction, marker='o', label=name_id)
-	
+		
+		#for checking the accuracy
+		mse = mean_squared_error(np.exp(test[0]), prediction)
+		print("RMSE(Root Mean Square Error) :"+str(mse))
 	#print the household
 	for i in range(len(top_3_24hour_kwh)):
 		print("Hour : "+str(i+1)+"\n")
