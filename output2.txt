@@ -1,0 +1,192 @@
+Hour : 1
+
+Rank : 0 HouseHold: MAC000034 Kwh: [10.9728764]
+
+Rank : 1 HouseHold: MAC000024 Kwh: [3.84694903]
+
+Rank : 2 HouseHold: MAC000032 Kwh: [3.70219713]
+
+Hour : 2
+
+Rank : 0 HouseHold: MAC000034 Kwh: [10.11929163]
+
+Rank : 1 HouseHold: MAC000032 Kwh: [2.53750109]
+
+Rank : 2 HouseHold: MAC000003 Kwh: [2.17238017]
+
+Hour : 3
+
+Rank : 0 HouseHold: MAC000034 Kwh: [9.35547355]
+
+Rank : 1 HouseHold: MAC000032 Kwh: [2.42780582]
+
+Rank : 2 HouseHold: MAC000035 Kwh: [0.94311503]
+
+Hour : 4
+
+Rank : 0 HouseHold: MAC000034 Kwh: [5.95605893]
+
+Rank : 1 HouseHold: MAC000032 Kwh: [1.77504946]
+
+Rank : 2 HouseHold: MAC000035 Kwh: [0.89892555]
+
+Hour : 5
+
+Rank : 0 HouseHold: MAC000034 Kwh: [3.73484069]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [0.90323922]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.80920939]
+
+Hour : 6
+
+Rank : 0 HouseHold: MAC000034 Kwh: [3.75369006]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [0.89420696]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.78428974]
+
+Hour : 7
+
+Rank : 0 HouseHold: MAC000034 Kwh: [3.1937846]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [0.89384395]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.85680144]
+
+Hour : 8
+
+Rank : 0 HouseHold: MAC000021 Kwh: [0.928447]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [0.87089297]
+
+Rank : 2 HouseHold: MAC000010 Kwh: [0.71128033]
+
+Hour : 9
+
+Rank : 0 HouseHold: MAC000026 Kwh: [1.25652405]
+
+Rank : 1 HouseHold: MAC000021 Kwh: [1.0423619]
+
+Rank : 2 HouseHold: MAC000010 Kwh: [0.84817606]
+
+Hour : 10
+
+Rank : 0 HouseHold: MAC000026 Kwh: [1.07553924]
+
+Rank : 1 HouseHold: MAC000021 Kwh: [1.03868741]
+
+Rank : 2 HouseHold: MAC000010 Kwh: [0.97202602]
+
+Hour : 11
+
+Rank : 0 HouseHold: MAC000021 Kwh: [1.06057431]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [1.00658113]
+
+Rank : 2 HouseHold: MAC000035 Kwh: [0.97796874]
+
+Hour : 12
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.16766678]
+
+Rank : 1 HouseHold: MAC000021 Kwh: [0.969728]
+
+Rank : 2 HouseHold: MAC000010 Kwh: [0.95419025]
+
+Hour : 13
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.29400626]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [1.00051119]
+
+Rank : 2 HouseHold: MAC000009 Kwh: [0.9631153]
+
+Hour : 14
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.33075461]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [1.13628206]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [1.13202309]
+
+Hour : 15
+
+Rank : 0 HouseHold: MAC000010 Kwh: [1.2968216]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.24748054]
+
+Rank : 2 HouseHold: MAC000024 Kwh: [1.04982532]
+
+Hour : 16
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.19018421]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [1.04999888]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.78606183]
+
+Hour : 17
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.20131618]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [0.90274252]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.80451799]
+
+Hour : 18
+
+Rank : 0 HouseHold: MAC000035 Kwh: [1.41360545]
+
+Rank : 1 HouseHold: MAC000010 Kwh: [1.2083349]
+
+Rank : 2 HouseHold: MAC000021 Kwh: [0.91956911]
+
+Hour : 19
+
+Rank : 0 HouseHold: MAC000010 Kwh: [2.02409846]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.4843912]
+
+Rank : 2 HouseHold: MAC000022 Kwh: [0.98266434]
+
+Hour : 20
+
+Rank : 0 HouseHold: MAC000010 Kwh: [2.13611917]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.60645991]
+
+Rank : 2 HouseHold: MAC000022 Kwh: [1.14325827]
+
+Hour : 21
+
+Rank : 0 HouseHold: MAC000010 Kwh: [1.69827299]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.57838587]
+
+Rank : 2 HouseHold: MAC000002 Kwh: [1.25303159]
+
+Hour : 22
+
+Rank : 0 HouseHold: MAC000010 Kwh: [1.57115872]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.44079614]
+
+Rank : 2 HouseHold: MAC000022 Kwh: [1.00014089]
+
+Hour : 23
+
+Rank : 0 HouseHold: MAC000010 Kwh: [1.32636549]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.16720598]
+
+Rank : 2 HouseHold: MAC000022 Kwh: [0.9742011]
+
+Hour : 24
+
+Rank : 0 HouseHold: MAC000010 Kwh: [1.15848332]
+
+Rank : 1 HouseHold: MAC000035 Kwh: [1.07633001]
+
+Rank : 2 HouseHold: MAC000022 Kwh: [0.96458897]
+

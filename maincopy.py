@@ -29,7 +29,7 @@ def arima_forecast(dataset_series):
 	# converting dataset into series
 	#dataset_series = to_series(dataset)
 	# define the model
-	model = ARIMA(dataset_series, order=(2,0,0))
+	model = ARIMA(dataset_series, order=(7,0,0))
 	# fit the model
 	model_fit = model.fit(disp=False)
 	# make forecast
