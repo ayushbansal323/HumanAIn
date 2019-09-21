@@ -14,24 +14,24 @@ from statsmodels.tsa.arima_model import ARIMA
 def error_remove(dataset):
 	#group the dataset by date
 	days = dataset.groupby(dataset.index.date)
-	total=[]
+	total=[[] for i in range(24)]
 	#check for inconsistance for the day
 	for name , oneday in days:
 		if(len(oneday)%24==0):
+			pos=0
 			for i in oneday.values:
-				total.append(i)
+				total[pos].append(i)
+				pos=pos+1
 	return total
 
 # arima forecast
-def arima_forecast(dataset):
-	# converting dataset into series
-	dataset_series = to_series(dataset)
+def arima_forecast(dataset_series):
 	# define the model
-	model = ARIMA(dataset_series, order=(7,0,0))
+	model = ARIMA(dataset_series, order=(7,0,0)) #ARIMA:(Autoregressive Integrated Moving Average)
 	# fit the model
 	model_fit = model.fit(disp=False)
 	# make forecast
-	forecast = model_fit.predict(len(dataset_series), len(dataset_series)+23)
+	forecast = model_fit.predict(len(dataset_series), len(dataset_series))
 	return forecast
 			
 # convert list of daily data into a series of total power
@@ -45,10 +45,7 @@ def to_series(data):
 # split a dataset into train/test sets
 def split_dataset(data):
 	# split data into days
-	train, test = data[:-24], data[-24:]
-	# restructure into windows of daily data
-	test = array(split(test, len(test)/24))
-	train = array(split(train, len(train)/24))
+	train, test = data[1:-6], data[-6:]
 	return train, test
 	
 	
@@ -64,7 +61,13 @@ def main():
 	#define list of list to store top electric consumtion householde names
 	top_3_24hour_names = [["1" for x in range(3)] for y in range(24)] 
 
+	mse=[]
+	pyplot.figure(1)
+	names=[]
+	pyplot.title("Each HouseHold Prediction")
+	
 	for name_id,dataset_id in dataset_group_id:
+		names.append(name_id)
 		#resample the dataset into hourly
 		hourly_datagroup_id = dataset_id.resample('H')
 		hourly_dataset_id = hourly_datagroup_id.sum()
@@ -73,21 +76,25 @@ def main():
 		hourly_dataset_id["KWh"]= ma.filled(np.log(ma.masked_equal(hourly_dataset_id["KWh"], 0)), 0)
 		
 		
-		hourly_dataset_id = hourly_dataset_id.loc['2012':'2013']
 		#removing inconsistance of dataset
 		filtered_dataset = error_remove(hourly_dataset_id)
 		
-		#split the dataset
-		train, test = split_dataset(np.array(filtered_dataset))
-	
 		#define hours
 		hours = ['1', '2', '3', '4', '5', '6', '7', '8' , '9' , '10' , '11' , '12' , '13' , '14' , '15' , '16' , '17' , '18' , '19' , '20' , '21' ,'22' ,'23' , '24' ]
-
-
-		predict_id = arima_forecast(train)
+		
+		
+		prediction=[]
+		test=[]
+		for i in range(len(filtered_dataset)):
+			
+			#split the dataset
+			train, tests = split_dataset(np.array(filtered_dataset[i]))
+	
+			predict_id = arima_forecast(train)
 		
 		#convert data again from logarithm form
-		prediction = np.exp(predict_id)
+			prediction.append(np.exp(predict_id))
+			test.append(tests[0])
 	
 		#find the top three household of every hour
 		for i in range(0,len(prediction)):
@@ -105,14 +112,17 @@ def main():
 		pyplot.plot(hours, prediction, marker='o', label=name_id)
 		
 		#for checking the accuracy
-		mse = mean_squared_error(np.exp(test[0]), prediction)
-		print("RMSE(Root Mean Square Error) :"+str(mse))
+		mse.append(mean_squared_error(np.exp(test), prediction))
+		#print("RMSE(Root Mean Square Error) :"+str(mse))
 	#print the household
 	for i in range(len(top_3_24hour_kwh)):
 		print("Hour : "+str(i+1)+"\n")
 		for j in range(0,3):
 			print("Rank : "+str(j)+" HouseHold: "+top_3_24hour_names[i][j]+" Kwh: "+str(top_3_24hour_kwh[i][j])+"\n")
 	pyplot.legend()
+	pyplot.figure(2)
+	pyplot.title("Root Mean Square Error")
+	pyplot.plot(names, mse, marker='o', label="Root Mean Square Error")
 	pyplot.show()
 if __name__ == '__main__':
     main()
