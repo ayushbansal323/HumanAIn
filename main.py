@@ -27,7 +27,7 @@ def error_remove(dataset):
 # arima forecast
 def arima_forecast(dataset_series):
 	# define the model
-	model = ARIMA(dataset_series, order=(7,0,0)) #ARIMA:(Autoregressive Integrated Moving Average)
+	model = ARIMA(dataset_series, order=(1,0,0)) #ARIMA:(Autoregressive Integrated Moving Average)
 	# fit the model
 	model_fit = model.fit(disp=False)
 	# make forecast
@@ -114,6 +114,7 @@ def main():
 		#for checking the accuracy
 		mse.append(mean_squared_error(np.exp(test), prediction))
 		#print("RMSE(Root Mean Square Error) :"+str(mse))
+	
 	#print the household
 	for i in range(len(top_3_24hour_kwh)):
 		print("Hour : "+str(i+1)+"\n")
