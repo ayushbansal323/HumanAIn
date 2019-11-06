@@ -9,6 +9,8 @@ from sklearn.metrics import mean_squared_error
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
+from pandas.plotting import autocorrelation_plot
+from statsmodels.graphics.tsaplots import plot_pacf
 import csv
 import pandas as pd
 
@@ -36,16 +38,17 @@ def arima_forecast(dataset_series,dateset,start_index,end_index):
 	# define the model
 	#dataset_series.to_csv('train.csv', index=False)
 	#print(dataset_series)
-	res = pd.Series(dataset_series, index=dateset)
+	#autocorrelation_plot(dataset_series)
 	#print(res)
+	res = pd.Series(dataset_series, index=dateset)
 	model = ARIMA(res, order=(1,0,0)) #ARIMA:(Autoregressive Integrated Moving Average)
 	# fit the model
 	model_fit = model.fit(disp=False)
 	# make forecast
 	#print(model_fit.summary())
-	forecast = model_fit.predict(end=end_index)
+	forecast= model_fit.predict(end=end_index)
 	#forecast = model_fit.predict(len(dataset_series), len(dataset_series))
-	return forecast[start_index:end_index]
+	return forecast[end_index:end_index]
 			
 # convert list of daily data into a series of total power
 def to_series(data):
@@ -80,8 +83,13 @@ def main():
 	pyplot.title("Each HouseHold Prediction")
 
 	
-	start_index = '2015-01-25'
-	end_index = '2015-01-26'
+	start_index = '2014-01-25'
+	end_index = '2014-01-26'
+
+	print("Enter date to predict")
+
+	start_index=input()
+	end_index=start_index
 	pred={}
 	for name_id,dataset_id in dataset_group_id:
 		names.append(name_id)
@@ -122,12 +130,18 @@ def main():
         
 	#print in csv
 	with open('pred.csv', 'w') as writeFile:
-	        writer = csv.writer(writeFile)
-	        csv.writerow(["household","date","Kwh"])
+	        header=["time"]
 	        for name in pred:
-	                for i in range(len(pred[name])):
+	                header.append(name)
+	        writer = csv.writer(writeFile,delimiter=',',dialect='excel',lineterminator='\n')
+	        writer.writerow(header)
+	        for i in range(24):
+	                row=[end_index+" "+str(i)+":00:00"]
+	                for name in pred:
+	                        row.append(pred[name][i][0][0])
 	                        #print(end_index+str(i)+" : "+name+" : "+str(pred[name][i][0][0]))
-	                        writer.writerow([name,end_index+" "+str(i)+":00:00",pred[name][i][0][0]])
+	                        #writer.writerow([name,end_index+" "+str(i)+":00:00",pred[name][i][0][0]])
+	                writer.writerow(row)
 	        #for date in pred[list(pred)[0]][0]: 
 	        #        print(date)
 	        #        print(df)

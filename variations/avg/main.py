@@ -97,9 +97,6 @@ def main():
 
 			
 			predict_id = arima_forecast(train)
-			#print(train)
-			#break
-			print("predicted: "+str(np.mean(predict_id))+"  actual:"+str(np.mean(tests)))
 		#convert data again from logarithm form
 			prediction.append(np.mean(np.exp(predict_id)))
 			test.append(np.mean(tests))
@@ -137,13 +134,13 @@ def main():
 		lines.append(line)
 	#print in csv
 	with open('output.csv', 'w') as writeFile:
-	        writer = csv.writer(writeFile)
+	        writer = csv.writer(writeFile,delimiter=',',dialect='excel',lineterminator='\n')
 	        writer.writerows(lines)
 	writeFile.close()
 	pyplot.legend()
 	pyplot.figure(2)
-	pyplot.title("Root Mean Square Error")
-	pyplot.plot(names, mse, marker='o', label="Root Mean Square Error")
+	pyplot.title("Mean Square Error")
+	pyplot.plot(names, mse, marker='o', label="Mean Square Error")
 	pyplot.show()
 if __name__ == '__main__':
     main()
